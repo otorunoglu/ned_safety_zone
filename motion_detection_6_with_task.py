@@ -34,7 +34,7 @@ def alarm_zone(height, width, img_rgb):
     return img_rgb
 
 def motion_detector_gist(is_motion_detected):
-        camera = cv2.VideoCapture(0)#"http://192.168.1.104:8081/video") #
+        camera = cv2.VideoCapture("http://192.168.1.103:8081/video") #
         previous_frame = None
         i=0        
         while True:
@@ -127,9 +127,9 @@ def motion_detector_gist(is_motion_detected):
                 is_motion_detected.value = 0.1
                 print("NOT")
 
-            cv2.imshow('Motion detector', image_new)        
-            if (cv2.waitKey(30) == 27):
-                break
+            #cv2.imshow('Motion detector', image_new)        
+            #if (cv2.waitKey(30) == 27):
+            #    break
             
         # Cleanup
         camera.release()
@@ -154,10 +154,9 @@ def robot_motion():
 
     # define the joints
     home_joints     =       [0.000, 0.355, -0.405, 0.000, -1.512, 0.196]
-    pick_observation_joints=[1.120, -0.386, -0.20, 0.360, -0.671, -0.150]
+    pick_observation_joints=[1.000, -0.386, -0.20, 0.360, -0.671, -0.150]
     pick_joints     =       [1.215, -0.645, -0.193, 0.368, -0.673, -0.147]
-    place_joints    =       [-1.490, -0.576, -0.078, -0.093, -0.682, -0.147]
-
+    place_joints    =       [-1.37, -0.386, -0.199, -0.360, -0.673, -0.150]
 
 
     # create a NiryoRobot object
@@ -191,7 +190,7 @@ def robot_motion():
         # Move to pick, pick and back pick_observation point 
         robot.move_joints(pick_joints)
         robot.grasp_with_tool()
-        robot.move_joints(pick_observation_joints)
+        #robot.move_joints(pick_observation_joints)
 
         [j1,j2,j3,j4,j5,j6] = robot.get_joints()
         while j2<place_joints[1]:
@@ -213,7 +212,10 @@ def robot_motion():
             [j1,j2,j3,j4,j5,j6] = robot.get_joints()
         robot.set_jog_control(False)
         
-        robot.move_joints(place_joints)
+        joints= robot.get_joints()
+        #print(joints)
+        
+        #robot.move_joints(place_joints)
         robot.release_with_tool()
 
         #j2 movement
